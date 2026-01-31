@@ -29,7 +29,7 @@ export const registerUser = async (req, res) => {
       role: role||"CUSTOMER"
     });
 
-    // 5️⃣ Send success response
+    // Send success response
     res.status(201).json({
       message: "User registered successfully"
     });
@@ -43,10 +43,10 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    // 1️⃣ Get email & password
+    //  Get email & password
     const { email, password } = req.body;
 
-    // 2️⃣ Check if user exists
+    //  Check if user exists
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -55,7 +55,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // 3️⃣ Compare passwords
+    //  Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -64,7 +64,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // 4️⃣ Login success
+    //  Login success
     const token = jwt.sign(
         {id: user._id, role:user.role},
         process.env.JWT_SECRET,

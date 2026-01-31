@@ -4,6 +4,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import protect from "./middleware/authMiddleware.js";
 import isAdmin from "./middleware/roleMiddleware.js";
+import discountRuleRoutes from "./routes/discountRuleRoutes.js";
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ app.use(express.json());
 
 app.use(express.json()); // IMPORTANT
 app.use("/api/auth", authRoutes);
-
+app.use("/api/discount-rules", discountRuleRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend is running");
