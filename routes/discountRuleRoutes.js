@@ -15,8 +15,8 @@ const router = express.Router();
 router.post("/", protect, isAdmin, createDiscountRule); //Create discount rules -- a
 router.get("/", protect, isAdmin, getAllDiscountRules); //View discount rules -- a
 router.patch("/:id/toggle", protect, isAdmin, toggleDiscountRule); //toggle whether discount is active or not -- a
-router.post("/check-eligibility", protect, checkDiscountEligibility); // checking eligibility for the discount
-router.post("/apply", protect, applyDiscount); // apply discount if eligible 
+router.post("/check-eligibility", protect, checkDiscountEligibility); // checking eligibility for the discount --c
+router.post("/apply", protect, applyDiscount); // apply discount if eligible --c
 router.get("/usage-report", protect, isAdmin, getDiscountUsageReport); // admin discount usage report --a
 router.get("/my-applied-discounts", protect, getCustomerAppliedDiscounts); //view apllied discounts --c
 
