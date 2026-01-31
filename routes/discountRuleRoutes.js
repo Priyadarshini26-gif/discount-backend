@@ -18,7 +18,7 @@ router.patch("/:id/toggle", protect, isAdmin, toggleDiscountRule); //toggle whet
 router.post("/check-eligibility", protect, checkDiscountEligibility); // checking eligibility for the discount --c
 router.post("/apply", protect, applyDiscount); // apply discount if eligible --c
 router.get("/usage-report", protect, isAdmin, getDiscountUsageReport); // admin discount usage report --a
-router.get("/my-applied-discounts", protect, getCustomerAppliedDiscounts); //view apllied discounts --c
+router.get("/my-applied-discounts", protect, getCustomerAppliedDiscounts); //view applied discounts --c
 
 
 export default router;

@@ -62,7 +62,7 @@ export const toggleDiscountRule = async (req, res) => {
   }
 };
 
-//check discount eligiblity --a
+//check discount eligiblity --c
 export const checkDiscountEligibility = async (req, res) => {
   try {
     const { ruleId, orderValue } = req.body;
@@ -113,7 +113,7 @@ export const checkDiscountEligibility = async (req, res) => {
   }
 };
 
-//apply discount if eligible
+//apply discount if eligible --c
 export const applyDiscount = async (req, res) => {
   try {
     const { ruleId, orderValue } = req.body;
@@ -126,7 +126,6 @@ export const applyDiscount = async (req, res) => {
       return res.status(400).json({ message: "Invalid or inactive discount rule" });
     }
 
-    // Rule checks again (never trust frontend)
     if (orderValue < rule.minOrderValue) {
       return res.status(400).json({ message: "Order value too low" });
     }
