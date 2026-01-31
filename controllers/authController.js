@@ -70,14 +70,30 @@ export const loginUser = async (req, res) => {
         process.env.JWT_SECRET,
         {expiresIn: "1d"}
     );
-    res.status(200).json({
-        message: "Login successful",
-        token
+    res.cookie("token", token, {
+        httpOnly: true,        
+        secure: false,         
+        sameSite: "strict",    
+        maxAge: 24 * 60 * 60 * 1000 
     });
+
+    res.status(200).json({
+        message: "Login successful"
+    });
+
 
   } catch (error) {
     res.status(500).json({
       message: error.message
     });
   }
+};
+
+export const logoutUser = (req, res) => {
+  res.cookie("token", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+
+  res.json({ message: "Logged out successfully" });
 };
