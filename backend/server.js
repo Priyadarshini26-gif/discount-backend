@@ -3,13 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import protect from "./middleware/authMiddleware.js";
-
-app.get("/api/protected", protect, (req, res) => {
-  res.json({
-    message: "You accessed a protected route",
-    user: req.user
-  });
-});
+import isAdmin from "./middleware/roleMiddleware.js";
 
 dotenv.config();
 
@@ -21,8 +15,20 @@ app.use(express.json());
 app.use(express.json()); // IMPORTANT
 app.use("/api/auth", authRoutes);
 
+
 app.get("/", (req, res) => {
-  res.send("Backend is running 🚀");
+  res.send("Backend is running");
+});
+
+app.get("/api/protected", protect, (req, res) => {
+  res.json({
+    message: "You accessed a protected route",
+    user: req.user
+  });
+});
+
+app.get("/api/admin-only",protect,isAdmin,(req,res)=>{
+  res.json({message:"Welcome Admin"});
 });
 
 const PORT = process.env.PORT || 5000;

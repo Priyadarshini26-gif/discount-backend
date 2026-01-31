@@ -5,10 +5,10 @@ import jwt from "jsonwebtoken";
 
 export const registerUser = async (req, res) => {
   try {
-    // 1️⃣ Get data from request body
+    // Get data from request body
     const { name, email, password, role } = req.body;
 
-    // 2️⃣ Check if user already exists
+    //  Check if user already exists
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -17,16 +17,16 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    // 3️⃣ Encrypt password
+    //  Encrypt password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // 4️⃣ Save user in database
+    //  Save user in database
     await User.create({
       name,
       email,
       password: hashedPassword,
-      role
+      role: role||"CUSTOMER"
     });
 
     // 5️⃣ Send success response
@@ -66,7 +66,7 @@ export const loginUser = async (req, res) => {
 
     // 4️⃣ Login success
     const token = jwt.sign(
-        {id: user._id},
+        {id: user._id, role:user.role},
         process.env.JWT_SECRET,
         {expiresIn: "1d"}
     );
