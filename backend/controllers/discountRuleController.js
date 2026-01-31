@@ -3,6 +3,7 @@ import DiscountUsage from "../models/DiscountUsage.js";
 import EligibilityResult from "../models/EligibilityResult.js";
 import AppliedDiscount from "../models/AppliedDiscount.js";
 
+//create discounts --a
 export const createDiscountRule = async (req, res) => {
   try {
     const {
@@ -30,6 +31,7 @@ export const createDiscountRule = async (req, res) => {
   }
 };
 
+//view created discounts --a
 export const getAllDiscountRules = async (req, res) => {
   try {
     const rules = await DiscountRule.find();
@@ -39,6 +41,7 @@ export const getAllDiscountRules = async (req, res) => {
   }
 };
 
+//discount active - T or F toggle --a
 export const toggleDiscountRule = async (req, res) => {
   try {
     const rule = await DiscountRule.findById(req.params.id);
@@ -59,6 +62,7 @@ export const toggleDiscountRule = async (req, res) => {
   }
 };
 
+//check discount eligiblity --a
 export const checkDiscountEligibility = async (req, res) => {
   try {
     const { ruleId, orderValue } = req.body;
@@ -109,6 +113,7 @@ export const checkDiscountEligibility = async (req, res) => {
   }
 };
 
+//apply discount if eligible
 export const applyDiscount = async (req, res) => {
   try {
     const { ruleId, orderValue } = req.body;
@@ -166,6 +171,33 @@ export const applyDiscount = async (req, res) => {
       discountAmount,
       finalAmount
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//admin discount usage report --a
+export const getDiscountUsageReport = async (req, res) => {
+  try {
+    const report = await DiscountUsage.find()
+      .populate("userId", "email role")
+      .populate("ruleId", "name discountPercent");
+
+    res.json(report);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//view discounts applied --c
+export const getCustomerAppliedDiscounts = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const appliedDiscounts = await AppliedDiscount.find({ userId })
+      .populate("ruleId", "name discountPercent");
+
+    res.json(appliedDiscounts);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
