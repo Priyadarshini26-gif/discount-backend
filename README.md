@@ -1,6 +1,6 @@
 <b>Rule-Based Discount Eligibility Management System (Backend)</b>
 
-<u>Project Overview:</u>
+Project Overview:
 This is the Backend of a Rule-Based Discount Eligibility Management System built with Node.js, Express, and MongoDB.  
 It provides APIs to:
 - Register and authenticate users (CUSTOMER / ADMIN)  
@@ -9,17 +9,17 @@ It provides APIs to:
 - Apply discounts and track usage (CUSTOMER)  
 - Generate usage reports (ADMIN) 
 
-<u>User Role and Permission:</u>
+User Role and Permission:
 CUSTOMER: Register/Login/Check discount eligibility/Apply discount/View applied discounts
 ADMIN: Register/Login/Create discount rules/View discount usage report/
 
-<u>Method:</u>
+Method:
 POST
 GET
 
 URL: 
 
-<u>Sample request and response formats:</u>
+Sample request and response formats:
 
 1. Registration:
 req_data:{
