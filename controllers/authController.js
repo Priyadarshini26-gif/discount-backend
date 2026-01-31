@@ -5,10 +5,8 @@ import jwt from "jsonwebtoken";
 
 export const registerUser = async (req, res) => {
   try {
-    // Get data from request body
     const { name, email, password, role } = req.body;
 
-    //  Check if user already exists
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -17,11 +15,9 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    //  Encrypt password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    //  Save user in database
     await User.create({
       name,
       email,
@@ -29,7 +25,6 @@ export const registerUser = async (req, res) => {
       role: role||"CUSTOMER"
     });
 
-    // Send success response
     res.status(201).json({
       message: "User registered successfully"
     });
@@ -43,10 +38,9 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    //  Get email & password
+
     const { email, password } = req.body;
 
-    //  Check if user exists
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -55,7 +49,6 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    //  Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -64,7 +57,6 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    //  Login success
     const token = jwt.sign(
         {id: user._id, role:user.role},
         process.env.JWT_SECRET,
