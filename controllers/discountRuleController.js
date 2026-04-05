@@ -11,7 +11,12 @@ export const createDiscountRule = async (req, res) => {
       minOrderValue,
       allowedRole,
       maxUsage,
-      discountPercent
+      discountPercent,
+      //new feature 1 expiration date and max amount count
+      startDate,
+      endDate,
+      maxDiscountAmount,
+      isFirstTimeOnly 
     } = req.body;
 
     const rule = await DiscountRule.create({
@@ -19,7 +24,11 @@ export const createDiscountRule = async (req, res) => {
       minOrderValue,
       allowedRole,
       maxUsage,
-      discountPercent
+      discountPercent,
+      startDate,
+      endDate,
+      maxDiscountAmount,
+      isFirstTimeOnly 
     });
 
     res.status(201).json({
@@ -65,6 +74,7 @@ export const toggleDiscountRule = async (req, res) => {
 //check discount eligiblity --c
 export const checkDiscountEligibility = async (req, res) => {
   try {
+    
     const { ruleId, orderValue } = req.body;
     const userId = req.user.id;
     const userRole = req.user.role;
@@ -78,6 +88,24 @@ export const checkDiscountEligibility = async (req, res) => {
     let reason = "";
     let isEligible = true;
 
+    //new feature
+    const now = new Date();
+
+    if (now < rule.startDate || now > rule.endDate) {
+      isEligible = false;
+      reason = "Discount expired or not active yet";
+    }
+
+    const usage = await DiscountUsage.findOne({ 
+      userId:userId, 
+      ruleId:ruleId 
+    });
+
+    if (rule.isFirstTimeOnly && usage && usage.usedCount >= 1) {
+      isEligible = false;
+      reason = "Only for first-time users";
+    }
+    
     if (!rule.isActive) {
       isEligible = false;
       reason = "Discount rule is inactive";
@@ -116,11 +144,20 @@ export const checkDiscountEligibility = async (req, res) => {
 //apply discount if eligible --c
 export const applyDiscount = async (req, res) => {
   try {
+
+    
     const { ruleId, orderValue } = req.body;
     const userId = req.user.id;
     const userRole = req.user.role;
 
     const rule = await DiscountRule.findById(ruleId);
+
+    const now = new Date();
+
+    if (now < rule.startDate || now > rule.endDate) {
+      return res.status(400).json({
+      message: "Discount expired or not active yet"});
+    }
 
     if (!rule || !rule.isActive) {
       return res.status(400).json({ message: "Invalid or inactive discount rule" });
@@ -134,14 +171,27 @@ export const applyDiscount = async (req, res) => {
       return res.status(403).json({ message: "User role not allowed" });
     }
 
+    console.log("USER ID:", userId);
+    console.log("RULE ID:", ruleId);
+
     let usage = await DiscountUsage.findOne({ userId, ruleId });
+    console.log("FOUND USAGE:", usage);
 
     if (usage && usage.usedCount >= rule.maxUsage) {
       return res.status(400).json({ message: "Discount usage limit exceeded" });
     }
 
+    if (rule.isFirstTimeOnly && usage && usage.usedCount >= 1) {
+      return res.status(400).json({message: "Only for first-time users"});
+    }
+
     // Calculate discount
-    const discountAmount = (orderValue * rule.discountPercent) / 100;
+    let discountAmount = (orderValue * rule.discountPercent) / 100;
+
+    //apply max cap
+    if (discountAmount > rule.maxDiscountAmount) {
+      discountAmount = rule.maxDiscountAmount;
+    }
     const finalAmount = orderValue - discountAmount;
 
     // Save applied discount

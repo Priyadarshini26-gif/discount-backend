@@ -26,6 +26,22 @@ const discountRuleSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
+    },
+    startDate: {
+      type: Date,
+      required: true
+    },
+    endDate: {
+      type: Date,
+      required: true
+    },
+    maxDiscountAmount: {
+      type: Number,
+      required: true
+    },
+    isFirstTimeOnly: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }
