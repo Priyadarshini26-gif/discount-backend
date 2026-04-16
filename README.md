@@ -1,126 +1,72 @@
-<b>Rule-Based Discount Eligibility Management System (Backend)</b>
+# Rule-Based Discount Eligibility Management System (Backend)
 
-Project Overview:
-This is the Backend of a Rule-Based Discount Eligibility Management System built with Node.js, Express, and MongoDB.  
-It provides APIs to:
-- Register and authenticate users (CUSTOMER / ADMIN)  
-- Manage discount rules (ADMIN)  
-- Evaluate discount eligibility (CUSTOMER)  
-- Apply discounts and track usage (CUSTOMER)  
-- Generate usage reports (ADMIN) 
+## Overview
+This project is the backend service for a Rule-Based Discount Eligibility Management System.
 
-User Role and Permission:
-CUSTOMER: Register/Login/Check discount eligibility/Apply discount/View applied discounts
-ADMIN: Register/Login/Create discount rules/View discount usage report/
+It is built using Node.js, Express, and MongoDB, and provides secure APIs for both ADMIN and CUSTOMER users.
 
-Method:
-POST
-GET
+The backend supports:
+- User registration and login
+- Role-based access control
+- Discount rule creation and management
+- Discount eligibility checks
+- Discount application and usage tracking
+- Admin usage reports
 
-URL: 
+---
 
-Sample request and response formats:
+## Tech Stack
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+- JWT Authentication
+- Cookie Parser
+- CORS
+- Dotenv
 
-1. Registration:
-req_data:{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123",
-  "role": "CUSTOMER"
-}
+---
 
-res_data: {
-  "_id": "65f1a2c9e4b0c1a123456789",
-  "name": "John Doe",
-  "email": "john@example.com",
-  "role": "CUSTOMER",
-  "token": "jwt_token_here"
-}
+## Base URL
+http://localhost:5000/api
 
-2. Login:
-req_data:{
-  "email": "john@example.com",
-  "password": "password123"
-}
+---
 
-res_data:{
-  "_id": "65f1a2c9e4b0c1a123456789",
-  "name": "John Doe",
-  "role": "CUSTOMER",
-  "token": "jwt_token_here"
-}
+## User Roles and Permissions
 
-3. Create discount rule:
-req_data: {
-  "name": "NEWYEAR10",
-  "minOrderValue": 1000,
-  "allowedRole": "CUSTOMER",
-  "maxUsage": 5,
-  "discountPercent": 10
-}
+### CUSTOMER
+- Register
+- Login
+- View discount rules
+- Check discount eligibility
+- Apply discount
+- View own applied discounts
 
-res_data:{
-  "_id": "65f2b9cde4b0c1a987654321",
-  "name": "NEWYEAR10",
-  "minOrderValue": 1000,
-  "allowedRole": "CUSTOMER",
-  "maxUsage": 5,
-  "discountPercent": 10,
-  "isActive": true
-}
+### ADMIN
+- Register
+- Login
+- Create discount rules
+- Toggle rule active/inactive
+- View all rules
+- View discount usage reports
 
-4. Check discount eligibility:
-req_data:{
-  "ruleId": "65f2b9cde4b0c1a987654321",
-  "orderValue": 1200
-}
+---
 
-res_data:{
-  "isEligible": true,
-  "message": "User is eligible for the discount"
-}
+## API Endpoints
 
-5. Apply discount:
-req_data:{
-  "ruleId": "65f2b9cde4b0c1a987654321",
-  "orderValue": 1200
-}
+### Authentication
+- POST /auth/register
+- POST /auth/login
+- POST /auth/logout
 
-res_data:{
-  "discountAmount": 120,
-  "finalAmount": 1080,
-  "message": "Discount applied successfully"
-}
+### Discount Rules
+- POST /discount-rules (Admin only)
+- GET /discount-rules
+- PATCH /discount-rules/:id/toggle (Admin only)
+- POST /discount-rules/check-eligibility
+- POST /discount-rules/apply
+- GET /discount-rules/my-applied-discounts
+- GET /discount-rules/usage-report (Admin only)
 
-6. View applied discounts:
-res_data:[
-  {
-    "_id": "65f3d1eae4b0c1a555555555",
-    "orderValue": 1200,
-    "discountAmount": 120,
-    "finalAmount": 1080,
-    "ruleId": {
-      "name": "NEWYEAR10",
-      "discountPercent": 10
-    }
-  }
-]
+### Additional Applied Discount Route
+- POST /applied/apply
 
-7. Discount usage report:
-res_data:[
-  {
-    "discountName": "NEWYEAR10",
-    "usedCount": 3
-  }
-]
-
-
-status code:
-200 - success
-201 - 
-401 - created
-400 - Already exist
-401 - Unauthorised
-403 - invalid code
-404 - 
-500 - Server error
