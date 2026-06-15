@@ -18,7 +18,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-origin: ["http://localhost:5173"],
+origin: ["http://localhost:5173",
+  "https://discount-frontend-one.vercel.app/"
+],
     credentials: true,
   })
 );
