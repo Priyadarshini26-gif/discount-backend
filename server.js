@@ -20,7 +20,7 @@ app.use(
   cors({
     origin: [
     "http://localhost:5173",
-    "https://discount-frontend-zeta.vercel.app/"
+    "https://discount-frontend-one.vercel.app/"
   ],
     credentials: true,
   })
