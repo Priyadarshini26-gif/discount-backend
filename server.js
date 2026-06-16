@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(
   cors({
 origin: ["http://localhost:5173",
-  "https://discount-frontend-one.vercel.app"
+  "https://discount-frontend-fawn.vercel.app"
 ],
     credentials: true,
   })
